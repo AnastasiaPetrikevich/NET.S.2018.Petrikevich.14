@@ -168,7 +168,9 @@ namespace Queue.Logic
 
             public bool MoveNext()
             {
-                if (++current < queue.Count)
+                current++;
+
+                if (current < queue.Count)
                 {
                     return true;
                 }
