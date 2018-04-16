@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Queue.Logic
 {
-    public sealed class Queue<T> 
+    public sealed class Queue<T> : IEnumerable<T>
     {
         #region Fields
 
@@ -15,16 +15,15 @@ namespace Queue.Logic
         private int tail;
         private int head;
         private int capacity = 15;
-        private int count;
-
         #endregion
 
         #region Properties
 
-        public int Count => count;
+        private int Version { get; set; }
+        public int Count { get; private set; }
 
         #endregion
-        
+
         #region Constructors
 
         /// <summary>
@@ -77,14 +76,15 @@ namespace Queue.Logic
                 throw new ArgumentNullException($"{nameof(element)} mustn't be null");
             }
 
-            if (count >= capacity)
+            if (Count >= capacity)
             {
                 Resize();
             }
 
             values[tail] = element;
-            tail = count;
-            count++;
+            tail = Count;
+            Count++;
+            Version++;
         }
 
         /// <summary>
@@ -96,7 +96,8 @@ namespace Queue.Logic
             T element = values[head];
             values[head] = default(T);
             head += 1;
-            count--;
+            Count--;
+            Version++;
             return element;
         }
 
@@ -114,7 +115,7 @@ namespace Queue.Logic
         public bool Contains(T element)
         {
             EqualityComparer<T> comparer = EqualityComparer<T>.Default;
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < Count; i++)
             {
                 if (comparer.Equals(values[i], element))
                 {
@@ -124,11 +125,7 @@ namespace Queue.Logic
 
             return false;
         }
-
-        public IEnumerator GetEnumerator()
-        {
-            return new Iterator(this);
-        }
+        
         #endregion
 
         #region Private methods
@@ -151,19 +148,40 @@ namespace Queue.Logic
 
         #endregion
 
-        #region Iterator
-        private class Iterator : IEnumerator<T>
-        {
-            private Queue<T> queue = new Queue<T>();
-            private int current = -1;
+        #region Enumerator
 
-            public T Current => queue.values[current];
+        public IEnumerator<T> GetEnumerator()
+            => new Enumerator(this);
+
+        IEnumerator IEnumerable.GetEnumerator()
+            => GetEnumerator();
+
+        private struct Enumerator : IEnumerator<T>
+        {
+            private readonly Queue<T> queue;
+            private readonly int version;
+            private int current;
+
+            public T Current
+            {
+                get
+                {
+                    if (current == -1)
+                    {
+                        throw new InvalidOperationException("Iteration do not started!");
+                    }
+
+                    return queue.values[current];
+                }
+            }
 
             object IEnumerator.Current => Current;
 
-            public Iterator(Queue<T> queue)
+            public Enumerator(Queue<T> queue)
             {
                 this.queue = queue;
+                this.version = queue.Version;
+                this.current = -1;
             }
 
             public bool MoveNext()
@@ -185,12 +203,12 @@ namespace Queue.Logic
 
             public void Dispose()
             {
-                throw new NotImplementedException();
+                
             }
         }
 
         #endregion
-
+        
     }
 
 }

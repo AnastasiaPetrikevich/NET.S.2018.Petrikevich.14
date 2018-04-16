@@ -5,11 +5,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E1F21D37-530E-41F7-A0AE-D33B95F6B0BC}</ProjectGuid>
+    <ProjectGuid>{30032160-A69D-45F7-BEA4-D5E0707F5B9A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Algorithm.Tests</RootNamespace>
-    <AssemblyName>Algorithm.Tests</AssemblyName>
+    <RootNamespace>BinarySearch.Tests</RootNamespace>
+    <AssemblyName>BinarySearch.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
@@ -46,20 +46,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AlgorithmsTests.cs" />
+    <Compile Include="SearchTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+    <ProjectReference Include="..\BinarySearch\BinarySearch.csproj">
+      <Project>{1b6fb156-37a8-4086-a166-84e3c61753c8}</Project>
+      <Name>BinarySearch</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Algorithm\Algorithm.csproj">
-      <Project>{82b4555a-14f0-4f30-88ef-547f01eba8c3}</Project>
-      <Name>Algorithm</Name>
-    </ProjectReference>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
